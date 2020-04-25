@@ -4,7 +4,7 @@ import utils
 import yfinance as yf
 
 
-STOCK = "TSLA"
+STOCK = "GILD"
 DOC_TYPE = "10-K"
 
 # Base URL for the SEC EDGAR browser
@@ -95,28 +95,29 @@ for row in doc_table[0].find_all('tr'):
         soup = BeautifulSoup(xml_content, 'lxml')
         reports = soup.find('myreports')
         
-        # Define the statements we want to look for
-        item1 = r"Consolidated Balance Sheets"
-        item2 = r"Consolidated Statements of Operations and Comprehensive Income (Loss)"
-        item3 = r"Consolidated Statements of Cash Flows"
-        item4 = r"Consolidated Statements of Stockholder's (Deficit) Equity"
-        item5 = r"Consolidated Statements of Shareholder's Equity"
-        item6 = r"Consolidated Statements of Operations"
-        item7 = r"Consolidated Statements of Income"
-        item8 = r"Consolidated Statements of Shareholders' Equity"
-        item9 = r"Consolidated Statements of Equity"
-        item10 = r"Consolidated Statements of Stockholders' Equity"
-        item11 = r"Consolidated Statements of Stockholder's Equity"
-        report_list = [item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11]
+        balance_stmts = ['consolidated balance sheets']
+        income_stmts = ['statements of income', 'statements of operations', 'statements of earnings', 'of comprehensive income', 'of comprehensive loss']
+        cash_stmts = ['cash flows']
+        sh_equity_stmts = ["stockholder's equity", "shareholder's equity", "stockholders' equity", "shareholders' equity", "statements of equity", "equity" ] 
 
-        #TODO: fix this. how? make possible lists for all 4 financial statements of possible wordings they could have
+      
+        financials = {}
+        financials['balance'] = balance_stmts
+        financials['income'] = income_stmts
+        financials['cash'] = cash_stmts
+        financials['equity'] = sh_equity_stmts
+        
         
         for report in reports.find_all('report')[:-1]:
-          #print('Looking:', report.shortname.text)
           report_name = report.shortname.text.lower()
-          if report_name in (r.lower() for r in report_list):
-            print('Grabbed:', report_name)
-            
+          if "consolidated" not in report_name: continue
+          #print('Looking:', report.shortname.text)
+          for key in financials:
+            possible = financials[key]
+            if any(x in report_name for x in possible):
+              skip_these = ['parenthetical', 'restatement', 'variable interest', 'arrangements', 'condensed', '(detail)', '(details)', '(tables)', 'details', 'paranthetical', 'parenthetical']
+              if any(y in report_name for y in skip_these): continue
+              print("Grabbed:", report_name)
 
     # Create and store the data in a dictionary
     file_dict = {}
