@@ -117,7 +117,7 @@ for row in doc_table[0].find_all('tr'):
             if any(x in report_name for x in possible):
               skip_these = ['parenthetical', 'restatement', 'variable interest', 'arrangements', 'condensed', '(detail)', '(details)', '(tables)', 'details', 'paranthetical', 'parenthetical']
               if any(y in report_name for y in skip_these): continue
-              print("Grabbed:", report_name, report.menucategory.text)
+              print("Grabbed:", report_name)
 
     # Create and store the data in a dictionary
     file_dict = {}
