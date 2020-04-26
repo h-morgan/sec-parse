@@ -102,8 +102,8 @@ class Company:
             reports = soup.find('myreports')
             
             balance_stmts = ['consolidated balance sheets', 'consolidated balance']
-            income_stmts = ['statements of income', 'statements of operations', 'statements of earnings', 'of comprehensive income', 'of comprehensive loss', 'statement of earnings', 'statement of income', 'statement of operations']
-            cash_stmts = ['cash flows', 'statement of cash']
+            income_stmts = ['statements of income', 'statements of operations', 'statements of earnings', 'of comprehensive income', 'of comprehensive loss', 'statement of earnings', 'statement of income', 'statement of operations', 'statement of comprehensive income', 'consolidated operations']
+            cash_stmts = ['cash flows', 'statement of cash', 'of operations']
             sh_equity_stmts = ["stockholder's equity", "shareholder's equity", "stockholders' equity", "shareholders' equity", "statements of equity", "equity", 'statement of financial position' ] 
 
           
@@ -127,9 +127,9 @@ class Company:
               for key in financials:
                 possible = financials[key]
                 if any(x in report_name for x in possible):
-                  skip_these = ['parenthetical', 'restatement', 'variable interest', 'arrangements', 'condensed', '(detail)', '(details)', '(tables)', 'details', 'paranthetical', 'parenthetical']
+                  skip_these = ['parenthetical', 'restatement', 'variable interest', 'arrangements', 'condensed', '(detail)', '(details)', '(tables)', 'details', 'paranthetical']
                   if any(y in report_name for y in skip_these): continue
-                  if report_dict[key] != {}: continue
+                  #if report_dict[key] != {}: continue
                   print(report.shortname.text)
                   report_dict[key]['name_short'] = report.shortname.text
                   try: 
@@ -178,7 +178,7 @@ class Company:
 	ALL 10K LOCATIONS COLLECTED AND STORED - NOW PROCESSING
 '''
 
-test = Company('AAPL')
+test = Company('SYF')
 
 #print(test.filing_storage[3]['links']['financial_stmts'])
 
