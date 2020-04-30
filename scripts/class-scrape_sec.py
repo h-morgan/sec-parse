@@ -5,22 +5,34 @@ import yfinance as yf
 
 
 class Company:
-  def __init__(self, stockTicker, docType='10-K'):
+  def __init__(self, stockTicker, docType='10-K', verbose=False):
+    self.verbose = verbose
     self.stock = stockTicker
-    self.company = self.setCompanyName(stockTicker)
+    self.company = self.getCompanyName()
     self.cik = utils.getCIKs([stockTicker])[stockTicker]
     self.doc_type = docType
     self.endpoint =  r"https://www.sec.gov/cgi-bin/browse-edgar"
-    self.filing_storage = self.getFilingInfo()
+    #self.filing_storage = self.getFilingInfo()
+    self.key_data = ''
 
-  def setCompanyName(self, stockTicker):
+  def getCompanyName(self):
+    '''
+    	Function to return the name of the company, given it's stock ticker.
+    	Utilizes yahoo finance
+    '''
     try:
-      company_name = yf.Ticker(stockTicker.info['longName'])
+      company_name = yf.Ticker(self.stock).info['longName']
     except: 
-      company_name = stockTicker
+      company_name = self.stock
+
     return company_name
 
+
   def getFilingInfo(self):
+    '''
+	Function to get 10 most recent 10-K filings, and all associated links, for the company
+	Returns a list of dicts with each dict containing the links for one 10-K
+    ''' 
     param_dict = { 'action' : 'getcompany', 'CIK' : self.cik, 'type' : self.doc_type }
 
     # Request the URL, and then parse the response, and let user know it was successful
@@ -130,7 +142,8 @@ class Company:
                   skip_these = ['parenthetical', 'restatement', 'variable interest', 'arrangements', 'condensed', '(detail)', '(details)', '(tables)', 'details', 'paranthetical']
                   if any(y in report_name for y in skip_these): continue
                   #if report_dict[key] != {}: continue
-                  print(report.shortname.text)
+                  if self.verbose == True:
+                    print(report.shortname.text)
                   report_dict[key]['name_short'] = report.shortname.text
                   try: 
                     report_dict[key]['stmt_url'] = base_url + report.htmlfilename.text
@@ -154,13 +167,14 @@ class Company:
         file_dict['links']['financial_stmts'] = financial_stmts
 
         # Let the user know it's working
-        print('='*100)
-        print("Company: " + self.company)
-        print("Filing Type: " + filing_type)
-        print("Filing Date: " + filing_date)
-        print("Filing Number: " + filing_numb)
-        print("Filing Link: " + filing_doc_link)
-        print("Filing Summary: " + xml_summary)
+        if self.verbose == True:
+          print('='*100)
+          print("Company: " + self.company)
+          print("Filing Type: " + filing_type)
+          print("Filing Date: " + filing_date)
+          print("Filing Number: " + filing_numb)
+          print("Filing Link: " + filing_doc_link)
+          print("Filing Summary: " + xml_summary)
         
         # Append the dictionary to the master list
         master_list.append(file_dict)
@@ -174,11 +188,13 @@ class Company:
     print('='*100)
     print(str(len(master_list)) + " documents retrieved. " + str(num_docs) + " 10-Ks collected.")
 
-'''
-	ALL 10K LOCATIONS COLLECTED AND STORED - NOW PROCESSING
-'''
 
-test = Company('SYF')
+  #def parseFinancialStmts():
+    
+
+
+test = Company('AAPL')
+print("Done. Collected all 10-ks for", test.company)
 
 #print(test.filing_storage[3]['links']['financial_stmts'])
 

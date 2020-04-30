@@ -4,7 +4,7 @@ import utils
 import yfinance as yf
 
 
-STOCK = "AAPL"
+STOCK = "TSLA"
 DOC_TYPE = "10-K"
 
 # Base URL for the SEC EDGAR browser
