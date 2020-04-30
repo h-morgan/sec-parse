@@ -193,8 +193,10 @@ class Company:
     
 
 
-test = Company('AAPL')
-print("Done. Collected all 10-ks for", test.company)
+# keep this here for now, for testing 
+if __name__ == "__main__":
+  test = Company('AAPL')
+  print("Done. Collected all 10-ks for", test.company)
 
-#print(test.filing_storage[3]['links']['financial_stmts'])
+  #print(test.filing_storage[3]['links']['financial_stmts'])
 
