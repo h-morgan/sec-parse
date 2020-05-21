@@ -12,7 +12,7 @@ class Company:
     self.cik = utils.getCIKs([stockTicker])[stockTicker]
     self.doc_type = docType
     self.endpoint =  r"https://www.sec.gov/cgi-bin/browse-edgar"
-    #self.filing_storage = self.getFilingInfo()
+    self.filing_storage = self.getFilingInfo()
     self.key_data = ''
 
   def getCompanyName(self):
@@ -147,8 +147,10 @@ class Company:
                   report_dict[key]['name_short'] = report.shortname.text
                   try: 
                     report_dict[key]['stmt_url'] = base_url + report.htmlfilename.text
+                    print(base_url + report.htmlfilename.text)
                   except: 
-                    report_dict[key]['stmt_url'] = base_url + report.xmlfilename.text
+                    report_dict[key]['stmt_url'] = base_url + report.xmlfilename.texyt
+                    print(base_url + report.htmlfilename.text)
                
             financial_stmts = report_dict  
 
@@ -180,7 +182,7 @@ class Company:
         master_list.append(file_dict)
 
         # Increment number of 10ks if type is 10k and link is not empty
-        if filing_type == '10-K' and filing_txt_link is not "no link": num_docs += 1
+        if filing_type == self.doc_type and filing_txt_link is not "no link": num_docs += 1
         if num_docs == 10: break
 
     return master_list
@@ -195,7 +197,7 @@ class Company:
 
 # keep this here for now, for testing 
 if __name__ == "__main__":
-  test = Company('AAPL')
+  test = Company('AAPL', verbose=True)
   print("Done. Collected all 10-ks for", test.company)
 
   #print(test.filing_storage[3]['links']['financial_stmts'])
