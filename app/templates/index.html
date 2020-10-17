@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEC Filing Search</title>
+</head>
+<body>
+
+    <div>
+        <h1>SEC EDGAR Filing Search</h1>
+    </div>
+    <div>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form.ticker.label }}{{ form.ticker() }}
+            {{ form.filing_type() }}
+            {{ form.submit() }}
+        </form>
+    </div>
+
+
+    
+</body>
+</html>
