@@ -1,7 +1,7 @@
 import requests
 import yfinance as yf
 
-
+from forms import filing_form
 
 
 def getCompanyName(ticker):
@@ -15,7 +15,7 @@ def getCompanyName(ticker):
 
   print(company_name)
 
+print(filing_form.filing)
 
 
 
-getCompanyName("TSLA")
